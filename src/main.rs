@@ -20,8 +20,21 @@ impl Tokenizer {
             ]
         }
     }
+
+    fn tokenize(&self, buf : &str) -> Vec<Token> {
+        let mut slice_start : usize = 0;
+        let mut v : Vec<Token> = Vec::new();
+        for reg_ex_and_token in & self.reg_ex_and_tokens {
+            if reg_ex_and_token.0.is_match(&buf[slice_start..]) {
+                v.push(reg_ex_and_token.1);
+            }
+        }
+
+        v
+
+    }
 }
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 enum Token {
     LeftParen = 0,
     RightParen = 1,
@@ -30,30 +43,7 @@ enum Token {
     RightBrace = 4,
 }
 
-struct TokenRegex {
-    regex : Regex,
-    token : Token,
-}
 
-fn next_token(buf : &str) -> Token {
-    match buf {
-        _ if Regex::new("^\\(").unwrap().is_match(buf) => Token::LeftParen,
-        _ if Regex::new("^\\)").unwrap().is_match(buf) => Token::RightParen,
-        _ if Regex::new("^\\{").unwrap().is_match(buf) => Token::LeftBrace,
-        _ if Regex::new("^\\}").unwrap().is_match(buf) => Token::RightBrace,
-        _ if Regex::new("^[A-z]+").unwrap().is_match(buf) => Token::Keyword,
-        _ => Token::RightBrace,
-    }
-}
-
-fn tokenize() {
-    let tokens : Vec<Token> = Vec::new();
-    let token_regexes : Vec<TokenRegex> = vec![
-    TokenRegex { regex: Regex::new("^\\(").unwrap(), token: Token::LeftParen},
-    TokenRegex { regex: Regex::new("^\\)").unwrap(), token: Token::RightParen }];
-    
-    
-}
 fn main() {
     let args: Vec<String> = env::args().collect();
     let path = Path::new(&args[1]);
@@ -70,6 +60,8 @@ fn main() {
         Err(why) => panic!("couldn't read {}: {}", display, why),
         Ok(_) => print!("Read {} successfully", args[1]),
     }
-    dbg!("{}", next_token(&s));
+    let t = Tokenizer::new();
+    let tokens = t.tokenize(&s);
+    dbg!(tokens);
     
 }
