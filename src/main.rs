@@ -4,34 +4,39 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 
+struct RegExAndToken {
+    regex : Regex,
+    token : Token
+}
+
 struct Tokenizer {
-    reg_ex_and_tokens : Vec<(Regex, Token)>
+    reg_ex_and_tokens : Vec<RegExAndToken>
 }
 
 impl Tokenizer {
     fn new() -> Self {
         Tokenizer {
             reg_ex_and_tokens : vec![
-            (Regex::new("^\\(").unwrap(), Token::LeftParen),
-            (Regex::new("^\\)").unwrap(), Token::RightParen),
-            (Regex::new("^\\{").unwrap(), Token::LeftBrace),
-            (Regex::new("^\\}").unwrap(), Token::RightBrace),
-            (Regex::new("^[A-z]+").unwrap(), Token::Keyword)
+            RegExAndToken { regex: Regex::new("^\\(").unwrap(), token: Token::LeftParen },
+            RegExAndToken { regex: Regex::new("^\\)").unwrap(), token: Token::RightParen },
+            RegExAndToken { regex: Regex::new("^\\{").unwrap(), token: Token::LeftBrace },
+            RegExAndToken { regex: Regex::new("^\\}").unwrap(), token: Token::RightBrace },
+            RegExAndToken { regex: Regex::new("^[A-z]+").unwrap(), token: Token::Keyword }
             ]
         }
     }
-
+    
     fn tokenize(&self, buf : &str) -> Vec<Token> {
         let mut slice_start : usize = 0;
         let mut v : Vec<Token> = Vec::new();
         for reg_ex_and_token in & self.reg_ex_and_tokens {
-            if reg_ex_and_token.0.is_match(&buf[slice_start..]) {
-                v.push(reg_ex_and_token.1);
+            if reg_ex_and_token.regex.is_match(&buf[slice_start..]) {
+                v.push(reg_ex_and_token.token);
             }
         }
-
+        
         v
-
+        
     }
 }
 #[derive(Debug, Copy, Clone)]
