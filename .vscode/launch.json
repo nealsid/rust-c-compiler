@@ -9,7 +9,9 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceRoot}/target/debug/rust-test.exe",
-            "args": ["${workspaceRoot}\\test\\hello.c"],
+            "args": [
+                "${workspaceRoot}\\test\\hello.c"
+            ],
         }
     ]
 }
