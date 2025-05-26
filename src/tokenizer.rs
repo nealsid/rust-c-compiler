@@ -28,52 +28,51 @@ impl Tokenizer {
     pub fn new() -> Self {
         Tokenizer {
             reg_ex_and_tokens: vec![
-                RegExAndToken {
-                    regex: Regex::new("^\\(").unwrap(),
-                    token: Token::LeftParen,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^\\)").unwrap(),
-                    token: Token::RightParen,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^\\{").unwrap(),
-                    token: Token::LeftBrace,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^\\}").unwrap(),
-                    token: Token::RightBrace,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^[A-Za-z_]+").unwrap(),
-                    token: Token::Keyword,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^,").unwrap(),
-                    token: Token::Comma,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^\\*").unwrap(),
-                    token: Token::Asterisk,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^\\[").unwrap(),
-                    token: Token::LeftBracket,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^\\]").unwrap(),
-                    token: Token::RightBracket,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^[0-9]+").unwrap(),
-                    token: Token::NumericConstant,
-                },
-                RegExAndToken {
-                    regex: Regex::new("^;").unwrap(),
-                    token: Token::Semicolon,
-                },
-
-            ],
+            RegExAndToken {
+                regex: Regex::new("^\\(").unwrap(),
+                token: Token::LeftParen,
+            },
+            RegExAndToken {
+                regex: Regex::new("^\\)").unwrap(),
+                token: Token::RightParen,
+            },
+            RegExAndToken {
+                regex: Regex::new("^\\{").unwrap(),
+                token: Token::LeftBrace,
+            },
+            RegExAndToken {
+                regex: Regex::new("^\\}").unwrap(),
+                token: Token::RightBrace,
+            },
+            RegExAndToken {
+                regex: Regex::new("^[A-Za-z_]+").unwrap(),
+                token: Token::Keyword,
+            },
+            RegExAndToken {
+                regex: Regex::new("^,").unwrap(),
+                token: Token::Comma,
+            },
+            RegExAndToken {
+                regex: Regex::new("^\\*").unwrap(),
+                token: Token::Asterisk,
+            },
+            RegExAndToken {
+                regex: Regex::new("^\\[").unwrap(),
+                token: Token::LeftBracket,
+            },
+            RegExAndToken {
+                regex: Regex::new("^\\]").unwrap(),
+                token: Token::RightBracket,
+            },
+            RegExAndToken {
+                regex: Regex::new("^[0-9]+").unwrap(),
+                token: Token::NumericConstant,
+            },
+            RegExAndToken {
+                regex: Regex::new("^;").unwrap(),
+                token: Token::Semicolon,
+            },
+           ],
         }
     }
 
