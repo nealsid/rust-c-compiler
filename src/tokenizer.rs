@@ -25,54 +25,58 @@ pub struct Tokenizer {
     reg_ex_and_tokens: Vec<RegExAndToken>,
 }
 
+macro_rules! regex {
+    ($str:literal) => { Regex::new($str).unwrap() };
+}
+
 impl Tokenizer {
     pub fn new() -> Self {
         Tokenizer {
             reg_ex_and_tokens: vec![
                 RegExAndToken {
-                    regex: Regex::new("^\\(").unwrap(),
+                    regex: regex!["^\\("],
                     token: Token::LeftParen,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^\\)").unwrap(),
+                    regex: regex!["^\\)"],
                     token: Token::RightParen,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^\\{").unwrap(),
+                    regex: regex!["^\\{"],
                     token: Token::LeftBrace,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^\\}").unwrap(),
+                    regex: regex!["^\\}"],
                     token: Token::RightBrace,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^[A-Za-z_]+").unwrap(),
+                    regex: regex!["^[A-Za-z_]+"],
                     token: Token::Keyword {
                         keyword: String::from(""),
                     },
                 },
                 RegExAndToken {
-                    regex: Regex::new("^,").unwrap(),
+                    regex: regex!["^,"],
                     token: Token::Comma,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^\\*").unwrap(),
+                    regex: regex!["^\\*"],
                     token: Token::Asterisk,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^\\[").unwrap(),
+                    regex: regex!["^\\["],
                     token: Token::LeftBracket,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^\\]").unwrap(),
+                    regex: regex!["^\\]"],
                     token: Token::RightBracket,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^[0-9]+").unwrap(),
+                    regex: regex!["^[0-9]+"],
                     token: Token::NumericConstant,
                 },
                 RegExAndToken {
-                    regex: Regex::new("^;").unwrap(),
+                    regex: regex!["^;"],
                     token: Token::Semicolon,
                 },
             ],
@@ -88,15 +92,13 @@ impl Tokenizer {
         'outer_loop: while slice_start < buf.len() {
             matched_newline = false;
             // if match whitespace, advance slice_start
-            if let Some(whitespace_match) = Regex::new("^[ \\t]+")
-                .unwrap()
+            if let Some(whitespace_match) = regex!["^[ \\t]+"]
                 .find(&buf[slice_start..])
             {
                 slice_start += whitespace_match.end();
             }
             // while match newline, increment line number and continue
-            while let Some(newline_match) = Regex::new("^(\\r?\\n)|^(\\n\\r?)")
-                .unwrap()
+            while let Some(newline_match) = regex!["^(\\r?\\n)|^(\\n\\r?)"]
                 .find(&buf[slice_start..])
             {
                 slice_start += newline_match.end();
