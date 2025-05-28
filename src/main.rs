@@ -3,7 +3,9 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 use crate::tokenizer::Tokenizer;
+use crate::parser::Parser;
 
+pub mod parser;
 pub mod tokenizer;
 
 fn main() {
@@ -24,5 +26,6 @@ fn main() {
     }
     let t = Tokenizer::new();
     let tokens = t.tokenize(&s);
-    dbg!(tokens);
+    let p = Parser { };
+    p.parse_program(tokens);
 }

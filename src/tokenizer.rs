@@ -5,11 +5,12 @@ struct RegExAndToken {
     token: Token,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
+#[repr(u8)]
 pub enum Token {
     LeftParen = 0,
     RightParen = 1,
-    Keyword = 2,
+    Keyword { keyword: String } = 2,
     LeftBrace = 3,
     RightBrace = 4,
     Comma = 5,
@@ -46,7 +47,7 @@ impl Tokenizer {
             },
             RegExAndToken {
                 regex: Regex::new("^[A-Za-z_]+").unwrap(),
-                token: Token::Keyword,
+                token: Token::Keyword{ keyword: String::from("") },
             },
             RegExAndToken {
                 regex: Regex::new("^,").unwrap(),
@@ -88,14 +89,16 @@ impl Tokenizer {
                         println!("Matched {}", reg_ex_and_token.regex);
                         println!("{} - {}", slice_start + hit.start(), slice_start + hit.end());
                         println!("{}", slice_start);
-                        v.push(reg_ex_and_token.token);
+                        let t : Token;
+                        t = match reg_ex_and_token.token {
+                            Token::Keyword { keyword: _ } => Token::Keyword{ keyword: String::from(&buf[slice_start + hit.start()..slice_start + hit.end()]) },
+                            _ => reg_ex_and_token.token.clone()
+                        };
+                        v.push(t);
                         slice_start += hit.end();
                         if let Some(whitespace_match) = Regex::new("^[ \\t\\r\\n]+").unwrap().find(&buf[slice_start..]) {
                             slice_start += whitespace_match.end();
                         }
-                        // while buf.as_bytes()[slice_start] == b' ' || buf.as_bytes()[slice_start] == b'\n' || buf.as_bytes()[slice_start] == b'\r' {
-                        //     slice_start += 1;
-                        // }
                         continue 'outer_loop;
                     }
                     None => {
