@@ -28,5 +28,5 @@ fn main() {
     let tokens = t.tokenize(&s);
     dbg!(&tokens);
     let p = Parser { };
-    //p.parse_program(tokens);
+    p.parse_program(tokens);
 }

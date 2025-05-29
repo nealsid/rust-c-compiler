@@ -13,10 +13,10 @@ struct RegExAndToken {
 
 #[derive(Debug)]
 pub struct TokenInfo {
-    token: Token,
-    line_number: usize,
-    column_start: usize,
-    column_end: usize,
+    pub token: Token,
+    pub line_number: usize,
+    pub column_start: usize,
+    pub column_end: usize,
 }
 
 #[derive(Debug, Clone)]
