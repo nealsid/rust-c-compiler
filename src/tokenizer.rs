@@ -1,8 +1,19 @@
 use regex::Regex;
 
+macro_rules! regex {
+    ($str:literal) => { Regex::new($str).unwrap() };
+}
+
 struct RegExAndToken {
     regex: Regex,
     token: Token,
+}
+
+#[derive(Debug)]
+pub struct TokenInfo {
+    token : Token,
+    line_number : u32,
+    column_number : u32
 }
 
 #[derive(Debug, Clone)]
@@ -23,10 +34,6 @@ pub enum Token {
 
 pub struct Tokenizer {
     reg_ex_and_tokens: Vec<RegExAndToken>,
-}
-
-macro_rules! regex {
-    ($str:literal) => { Regex::new($str).unwrap() };
 }
 
 impl Tokenizer {
@@ -83,10 +90,10 @@ impl Tokenizer {
         }
     }
 
-    pub fn tokenize(&self, buf: &str) -> Vec<Token> {
+    pub fn tokenize(&self, buf: &str) -> Vec<TokenInfo> {
         let mut slice_start: usize = 0;
         let mut current_line_number: u32 = 1;
-        let mut v: Vec<Token> = Vec::new();
+        let mut v: Vec<TokenInfo> = Vec::new();
         let mut matched_newline = false;
 
         'outer_loop: while slice_start < buf.len() {
@@ -130,7 +137,12 @@ impl Tokenizer {
                             },
                             _ => reg_ex_and_token.token.clone(),
                         };
-                        v.push(t);
+                        let token_info = TokenInfo {
+                            token: t,
+                            line_number: current_line_number,
+                            column_number: 0
+                        };
+                        v.push(token_info);
                         slice_start += hit.end();
                         continue 'outer_loop;
                     }
