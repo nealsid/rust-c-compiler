@@ -45,7 +45,7 @@ impl Tokenizer {
         let mut current_line_number: usize = 1;
         let mut current_column_number: usize = 0;
         let mut token_infos: Vec<TokenInfo> = Vec::new();
-        let mut matched_newline = false;
+        let mut matched_newline : bool;
 
         'outer_loop: while slice_start < buf.len() {
             matched_newline = false;

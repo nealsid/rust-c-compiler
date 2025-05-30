@@ -19,14 +19,15 @@ fn main() {
         Ok(file) => file,
     };
 
-    let mut s = String::new();
-    match file.read_to_string(&mut s) {
+    let mut program_buffer = String::new();
+    match file.read_to_string(&mut program_buffer) {
         Err(why) => panic!("couldn't read {}: {}", display, why),
         Ok(_) => println!("Read {} successfully", args[1]),
     }
     let t = Tokenizer::new();
-    let tokens = t.tokenize(&s);
+    let tokens = t.tokenize(&program_buffer);
     dbg!(&tokens);
     let p = Parser { };
-    p.parse_program(tokens);
+    let parse_result = p.parse_program(&tokens);
+    dbg!(&parse_result);
 }
