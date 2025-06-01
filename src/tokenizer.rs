@@ -19,6 +19,12 @@ pub struct TokenInfo {
     pub column_end: usize,
 }
 
+impl PartialEq for Token {
+    fn eq(&self, other: &Token) -> bool {
+        return self == other;
+    }
+}
+
 #[derive(Debug, Clone)]
 #[repr(u8)]
 pub enum Token {

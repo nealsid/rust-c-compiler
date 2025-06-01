@@ -4,7 +4,7 @@ use crate::tokenizer::{Token, TokenInfo};
 enum NodeType {
     ProgramNode,
     FunctionNode {
-        return_type: Result<DataType, &'static str>,
+        return_type: Result<DataTypeNode, &'static str>,
         function_name: Result<String, &'static str>,
     },
 }
@@ -14,6 +14,12 @@ pub struct ASTNode {
     children: Vec<Result<ASTNode, &'static str>>,
     token: Option<Token>,
     node_type: NodeType,
+}
+
+#[derive(Debug)]
+struct DataTypeNode {
+    data_type: DataType,
+    pointer_modifiers: usize, // Number of stars in the datatype decl
 }
 
 #[derive(Debug)]
@@ -45,8 +51,10 @@ impl Parser {
     ) -> Result<ASTNode, &'static str> {
         let data_type_result = self.parse_data_type(tokens, *token_counter);
         *token_counter += 1;
+
         let function_name_result = self.parse_function_name(tokens, *token_counter);
         *token_counter += 1;
+
         if !self.parse_left_paren(tokens, *token_counter) {
             return Err("Missing left paren");
         }
@@ -68,11 +76,14 @@ impl Parser {
         &self,
         tokens: &Vec<TokenInfo>,
         token_index: usize,
-    ) -> Result<DataType, &'static str> {
+    ) -> Result<DataTypeNode, &'static str> {
         let data_type_token = &tokens[token_index];
         if let Token::Keyword { keyword: s } = &data_type_token.token {
             match s.as_str() {
-                "int" => Ok(DataType::Integer),
+                "int" => Ok(DataTypeNode {
+                    data_type: DataType::Integer,
+                    pointer_modifiers: 0,
+                }),
                 _ => Err("Parse error"),
             }
         } else {
@@ -90,6 +101,20 @@ impl Parser {
             Ok(s.to_string())
         } else {
             Err("Function name parse error")
+        }
+    }
+
+    fn parse_single_character_token(
+        &self,
+        tokens: &Vec<TokenInfo>,
+        expected_token: Token,
+        token_index: usize,
+    ) -> bool {
+        let next_token = &tokens[token_index];
+        if next_token.token == expected_token {
+            true
+        } else {
+            false
         }
     }
 
