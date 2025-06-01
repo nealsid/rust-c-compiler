@@ -19,13 +19,7 @@ pub struct TokenInfo {
     pub column_end: usize,
 }
 
-impl PartialEq for Token {
-    fn eq(&self, other: &Token) -> bool {
-        return self == other;
-    }
-}
-
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[repr(u8)]
 pub enum Token {
     LeftParen = 0,
@@ -51,7 +45,7 @@ impl Tokenizer {
         let mut current_line_number: usize = 1;
         let mut current_column_number: usize = 0;
         let mut token_infos: Vec<TokenInfo> = Vec::new();
-        let mut matched_newline : bool;
+        let mut matched_newline: bool;
 
         'outer_loop: while slice_start < buf.len() {
             matched_newline = false;
@@ -59,6 +53,11 @@ impl Tokenizer {
             if let Some(whitespace_match) = regex![r"^[ \t]+"].find(&buf[slice_start..]) {
                 slice_start += whitespace_match.end();
                 current_column_number += whitespace_match.end();
+
+                // if the file ends in whitespace, we're done tokenizing
+                if slice_start >= buf.len() {
+                    break;
+                }
             }
             // while match newline, increment line number and continue
             while let Some(newline_match) = regex![r"^(\r?\n)|^(\n\r?)"].find(&buf[slice_start..]) {
@@ -100,7 +99,7 @@ impl Tokenizer {
                             token: t,
                             line_number: current_line_number,
                             column_start: current_column_number,
-                            column_end: current_column_number + hit.end()
+                            column_end: current_column_number + hit.end(),
                         };
                         token_infos.push(token_info);
                         slice_start += hit.end();

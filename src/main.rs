@@ -7,7 +7,8 @@ use crate::parser::Parser;
 
 pub mod parser;
 pub mod tokenizer;
-
+#[cfg(test)]
+mod tokenizer_test;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let path = Path::new(&args[1]);
